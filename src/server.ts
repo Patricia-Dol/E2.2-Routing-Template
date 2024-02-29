@@ -45,6 +45,13 @@ const routes: Routes = {
 	DELETE: {},
 };
 
+// const a: number = 3;
+// const b: Function = (a: number, b: number) => {
+// 	return a + b;
+// };
+
+// console.log(b(1, 2));
+
 /**
  * A function that handles all incoming requests.
  * It logs the request method and URL to the console.
@@ -54,11 +61,14 @@ const routes: Routes = {
  * @param req The request object.
  * @param res The response object.
  */
+
 const handleRequest = (req: IncomingMessage, res: ServerResponse) => {
 	console.log(`${req.method} ${req.url}`);
 
+	const url = req.url?.startsWith("/pokemon/") ? "/pokemon/:id" : req.url;
+
 	// TODO: Determine the route handler based on the request method and URL.
-	const handler = routes["GET"]["/"];
+	const handler = routes[req.method!][url!];
 
 	if (handler) {
 		handler(req, res);
@@ -73,11 +83,13 @@ const handleRequest = (req: IncomingMessage, res: ServerResponse) => {
  * Populate the routes object by placing function references,
  * e.g., the `getAllPokemon` function you made, into these slots to establish paths.
  */
+
+// TODO: Determine the route handler based on the request method and URL.
 routes.GET["/"] = getHome;
 routes.GET["/pokemon/:id"] = getOnePokemon;
 routes.POST["/pokemon"] = createPokemon;
-
-// TODO: Add the remaining routes to the routes object.
+routes.PUT["/pokemon/:id"] = updatePokemon;
+routes.DELETE["/pokemon/:id"] = deletePokemon
 
 const server = http.createServer(handleRequest);
 

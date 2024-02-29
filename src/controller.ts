@@ -95,17 +95,12 @@ export const updatePokemon = (req: IncomingMessage, res: ServerResponse) => {
 
 // DELETE /pokemon/:id
 export const deletePokemon = (req: IncomingMessage, res: ServerResponse) => {
-    if (req.method === 'DELETE' && req.url?.startsWith('/pokemon/')){
-        const urlParts = req.url.split('/');
-        const pokemonId = parseInt(urlParts[2]);
+     const urlParts = req.url!.split('/');
+    const pokemonId = parseInt(urlParts[2]);
 
-        req.on('end', () => {
+    const temp = database.slice(pokemonId)
 
-            const temp = database.slice(pokemonId)
-
-            res.statusCode = 201; // 'Created'
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ message: 'Pokemon updated!', payload: temp }, null, 2));
-        })
-    }
+    res.statusCode = 201; // 'Created'
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ message: 'Pokemon updated!', payload: temp }, null, 2));
 };
